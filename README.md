@@ -1,0 +1,2 @@
+# spltitGraph
+Graph for Splitit
