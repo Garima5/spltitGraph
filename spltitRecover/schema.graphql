@@ -1,0 +1,45 @@
+type NewExpense @entity(immutable: true) {
+  id: ID!
+  expenseId: Bytes! # bytes32
+  expenseOwner: Bytes! # address
+  expenseVendor: Bytes! # address
+  deadline: BigInt! # uint256
+  initialDeposit: BigInt! # uint256
+  eventDataCID: String! # string
+  maxCapacity: BigInt! # uint256
+  actualCost: BigInt! # uint256
+  totalContributors: BigInt!
+  paidOut: Boolean!
+  contributions: [Contribution!] @derivedFrom(field: "expense")
+  paidOutContributor:[PaymentToContributor!] @derivedFrom(field: "expense")
+}
+type Account @entity{
+  id: ID!
+  totalAmountDeposited: BigInt!
+  totalContributions: BigInt!
+  contributedExpenses: [Contribution!] @derivedFrom(field: "contributorAddress")
+  amountReceivedBack:[PaymentToContributor!] @derivedFrom(field: "contributorAddress")
+}
+
+type Contribution @entity(immutable: true) {
+  id: ID!
+  expense: NewExpense! # bytes32
+  contributorAddress: Account! # address
+  amountDeposited: BigInt! # uint256
+}
+
+
+type PaymentToContributor @entity(immutable: true) {
+  id: ID!
+  expense: NewExpense! # bytes32
+  contributorAddress: Account! # address
+  amountPaidOutIndividually: BigInt! # uint256
+  amountPaidback: BigInt! # uint256 # This is basically deposited amount - individual paid amount
+}
+
+
+type PaymentsToVendor @entity(immutable: true) {
+  id: ID!
+  expense: NewExpense! # bytes32
+  amountPaidOutIndividually: BigInt! # uint256
+}

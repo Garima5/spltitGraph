@@ -1,0 +1,33 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Splitit
+    network: mumbai
+    source:
+      address: "0xEAb9ad4e60350Bcc206911482AAEab643D6B8A53"
+      abi: Splitit
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - NewContribution
+        - NewExpenseCreated
+        - PayBackContributor
+        - PayVendor
+      abis:
+        - name: Splitit
+          file: ./abis/Splitit.json
+      eventHandlers:
+        - event: NewContribution(bytes32,address,uint256)
+          handler: handleNewContribution
+        - event: NewExpenseCreated(bytes32,address,address,uint256,uint256,string,uint256,uint256)
+          handler: handleNewExpenseCreated
+        - event: PayBackContributor(bytes32,address,uint256,uint256)
+          handler: handlePayBackContributor
+        - event: PayVendor(bytes32,uint256)
+          handler: handlePayVendor
+      file: ./src/splitit.ts
